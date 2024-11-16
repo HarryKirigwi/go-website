@@ -1,0 +1,12 @@
+.feature-messages {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+.card-styles {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}

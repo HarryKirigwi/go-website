@@ -1,0 +1,132 @@
+.container {
+  height: fit-content;
+  /* background-color: #257dd4; */
+  background-color: #009be5;
+  padding: 20px;
+  margin-bottom: 100px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  margin-top: 4rem;
+}
+.submit-div {
+  display: flex;
+  justify-content: end;
+}
+.fa-whatsapp {
+  color: #eeeeef;
+  font-size: large;
+}
+.icon {
+  display: flex;
+  height: 44px;
+  align-items: center;
+}
+
+.forgot-password-div {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+}
+
+.forgot-password-div div {
+  height: 42px;
+  display: grid;
+  align-items: center;
+}
+
+.forgot-password {
+  text-decoration: none;
+  height: 20px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    height: fit-content;
+  }
+}
+
+/*Login form styles*/
+
+.signup-box {
+  height: 100vh;
+}
+
+.login-form,
+.signupForm {
+  background-color: transparent;
+  color: white;
+}
+
+/*Order form styles*/
+.order-section {
+  height: fit-content;
+  border-radius: 10px;
+}
+.order-form-section {
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+}
+.form-container {
+  display: flex;
+  vertical-align: top;
+}
+
+.order-form {
+  max-width: 400px;
+}
+
+/*Paper details form styles*/
+
+.paper-details {
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+}
+
+.login-container,
+.signup-box {
+  height: 100vh;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-left: 8rem;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.login-image {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)),
+    url("../images/pexels-cup-of-couple-6177634.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.login-form,
+.login-image,
+.signupForm {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-form,
+.signupForm {
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  width: 35%;
+}
+
+.login-image {
+  right: 0;
+  width: 65%;
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+}

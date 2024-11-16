@@ -1,0 +1,19 @@
+.landing-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-image: linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)),
+    url("../images/pexels-cup-of-couple-6177634.jpg");
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Photo by <a href="/photographer/ilco-59052">ilco</a> on <a href="/">Freeimages.com</a> */
+/* Photo by Yan Krukau: https://www.pexels.com/photo/people-giving-high-fives-8199708/ */
+
+/* Photo by Michael Burrows: https://www.pexels.com/photo/work-desk-with-laptop-and-book-in-light-room-7147666/ */
+
+/* Photo by Cup of  Couple: https://www.pexels.com/photo/modern-laptop-and-retro-film-photography-equipment-placed-on-table-with-coffee-glass-6177634/ */

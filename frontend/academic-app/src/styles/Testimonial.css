@@ -1,0 +1,54 @@
+/* Styles for the main testimonial section */
+.testimonial-section {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 4rem;
+  padding: 0 1rem; /* Add horizontal padding for smaller screens */
+}
+
+/* Styles for the testimonial profile container */
+.testimonial-profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Vertically center the profile elements */
+}
+
+/* Styles for the profile image placeholder */
+.image-div {
+  background-color: gray;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%; /* Use 50% for a perfect circle */
+  margin-right: 15px;
+  flex-shrink: 0; /* Prevent the image from shrinking on small screens */
+}
+
+/* Media query for screens smaller than 768px (typical tablet breakpoint) */
+@media (max-width: 768px) {
+  .testimonial-section {
+    margin-top: 2rem; /* Reduce top margin on smaller screens */
+  }
+
+  .image-div {
+    width: 30px; /* Slightly reduce image size on smaller screens */
+    height: 30px;
+  }
+}
+
+/* Media query for screens smaller than 480px (typical mobile breakpoint) */
+@media (max-width: 480px) {
+  .testimonial-section {
+    margin-top: 1rem; /* Further reduce top margin on mobile */
+  }
+
+  .testimonial-profile {
+    flex-direction: column; /* Stack profile elements vertically on very small screens */
+    align-items: flex-start; /* Align items to the start when stacked */
+  }
+
+  .image-div {
+    margin-bottom: 10px; /* Add space between image and text when stacked */
+  }
+}
