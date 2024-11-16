@@ -1,4 +1,4 @@
-module github.com/HarryKirigwi/go-website/blob/main/backend/routes
+module github.com/HarryKirigwi/go-website/backend/routes
 
 go 1.23.3
 

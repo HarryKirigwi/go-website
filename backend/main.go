@@ -2,12 +2,13 @@ package main
 
 import (
 	"log"
+	"os"
 
+	"github.com/HarryKirigwi/go-website/backend/config"
+    "github.com/HarryKirigwi/go-website/backend/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
-	"github.com/HarryKirigwi/go-website/blob/main/backend/config"
-	"github.com/HarryKirigwi/go-website/blob/main/backend/routes"
 )
 
 func main() {
