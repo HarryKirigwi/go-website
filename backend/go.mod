@@ -3,10 +3,10 @@ module github.com/HarryKirigwi/go-website/backend
 go 1.23.3
 
 require (
+	github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241116120324-3a3603e19ab4
+	github.com/HarryKirigwi/go-website/backend/routes v0.0.0-20241116115405-2d68637a420d
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/joho/godotenv v1.5.1
-	go.mongodb.org/mongo-driver v1.17.1
-	golang.org/x/crypto v0.29.0
 )
 
 require (
@@ -26,8 +26,10 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
+	go.mongodb.org/mongo-driver v1.17.1 // indirect
+	golang.org/x/crypto v0.29.0 // indirect
 	golang.org/x/sync v0.9.0 // indirect
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
-	
+
 )

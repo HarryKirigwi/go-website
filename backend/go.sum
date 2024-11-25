@@ -1,3 +1,7 @@
+github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241116120324-3a3603e19ab4 h1:oM2TsantJM7WaXgvz43k3Co1/6XWlZgfQb9H+IRVJS0=
+github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241116120324-3a3603e19ab4/go.mod h1:sDrguxdZz2LrwYDWngQkI2BdanVKDCJTJk3mONT9iGk=
+github.com/HarryKirigwi/go-website/backend/routes v0.0.0-20241116115405-2d68637a420d h1:a6HNvDwcZU1yIn+hLNOS3eIICBn39+nlBfBhzTQPCD8=
+github.com/HarryKirigwi/go-website/backend/routes v0.0.0-20241116115405-2d68637a420d/go.mod h1:lNkuEwiEHZqoLYutlRahA5vtSMCKp92HuvC0VC2Aer8=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
