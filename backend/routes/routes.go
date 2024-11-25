@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
+	"github.com/HarryKirigwi/go-website/backend/auth"
 )
 
 // RegisterRoutes registers all the routes for the application
@@ -78,4 +79,20 @@ func RegisterRoutes(app *fiber.App, collection *mongo.Collection) {
 			"message": "User registered successfully",
 		})
 	})
+}
+
+func SetupRoutes(app *fiber.App) {
+    api := app.Group("/api")
+
+    // Authentication routes
+    api.Post("/login", auth.Login)
+
+
+    // Protected routes
+    api.Get("/user/dashboard", auth.AuthMiddleware("user"), func(c *fiber.Ctx) error {
+        return c.JSON(fiber.Map{"message": "Welcome to the User Dashboard"})
+    })
+    api.Get("/admin/dashboard", auth.AuthMiddleware("admin"), func(c *fiber.Ctx) error {
+        return c.JSON(fiber.Map{"message": "Welcome to the Admin Dashboard"})
+    })
 }

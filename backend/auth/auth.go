@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/HarryKirigwi/go-website/backend/config"
-	"github.com/HarryKirigwi/go-website/backend/models"
+    "github.com/HarryKirigwi/go-website/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
