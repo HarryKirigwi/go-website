@@ -4,12 +4,12 @@ go 1.23.3
 
 require (
 	github.com/HarryKirigwi/go-website/backend/auth v0.0.0-20241126060937-cad52527b896
-	github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241125095726-abbb2d7beb7a
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/joho/godotenv v1.5.1
 )
 
 require (
+	github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241125095726-abbb2d7beb7a // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect

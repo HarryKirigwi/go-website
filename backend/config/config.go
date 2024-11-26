@@ -83,9 +83,9 @@ func connectDatabase() (*mongo.Client, *mongo.Database, error) {
 	return client, client.Database(databaseName), nil
 }
 
-// initializeCollections ensures that the required collections and indexes exist
+// initializeCollections 
 func initializeCollections(db *mongo.Database) error {
-	// Check or create "userscollection" and ensure its indexes
+	
 	collection := db.Collection("userscollection")
 	if err := ensureUsersCollectionIndexes(collection); err != nil {
 		return fmt.Errorf("failed to initialize userscollection: %v", err)
@@ -95,9 +95,9 @@ func initializeCollections(db *mongo.Database) error {
 	return nil
 }
 
-// ensureUsersCollectionIndexes ensures required indexes for the users collection
+
 func ensureUsersCollectionIndexes(collection *mongo.Collection) error {
-	// Create a unique index for the "email" field
+	
 	indexModel := mongo.IndexModel{
 		Keys:    bson.D{{Key: "email", Value: 1}},
 		Options: options.Index().SetUnique(true),

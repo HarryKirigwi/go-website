@@ -3,11 +3,9 @@ package main
 import (
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
 
+	// "github.com/HarryKirigwi/go-website/backend/config"
 	"github.com/HarryKirigwi/go-website/backend/auth"
-	"github.com/HarryKirigwi/go-website/backend/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -16,24 +14,16 @@ import (
 
 func main() {
 	// Load environment variables
-	if err := godotenv.Load(); err != nil {
-		log.Println("Warning: .env file not found. Ensure environment variables are set.")
-	}
-
-	// Initialize configuration (database and JWT secret)
-	cfg, err := config.InitConfig()
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Failed to initialize configuration: %v", err)
+		log.Fatal("Error loading .env file:", err)
 	}
-	defer func() {
-		if err := cfg.Client.Disconnect(config.DefaultContext()); err != nil {
-			log.Printf("Error disconnecting from MongoDB: %v", err)
-		} else {
-			log.Println("Successfully disconnected from MongoDB.")
-		}
-	}()
 
-	// Validate ALLOWED_ORIGIN
+	// Validate JWT_SECRET and ALLOWED_ORIGIN
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("JWT_SECRET is not set in the environment variables")
+	}
 	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
 	if allowedOrigin == "" {
 		log.Fatal("ALLOWED_ORIGIN is not set in the environment variables")
@@ -55,33 +45,6 @@ func main() {
 	app.Static("/", "./public")
 
 	// Register routes
-	registerRoutes(app)
-
-	// Graceful shutdown
-	go func() {
-		port := os.Getenv("PORT")
-		if port == "" {
-			port = "3000" // Default port
-		}
-		log.Printf("Server is running on port %s...", port)
-		if err := app.Listen(":" + port); err != nil {
-			log.Fatalf("Failed to start server: %v", err)
-		}
-	}()
-
-	// Wait for termination signals
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-
-	log.Println("Shutting down server...")
-	if err := app.Shutdown(); err != nil {
-		log.Printf("Error during server shutdown: %v", err)
-	}
-}
-
-// registerRoutes registers all application routes
-func registerRoutes(app *fiber.App) {
 	// Public routes
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Status(200).SendString("Welcome to the User Registration API!")
@@ -99,4 +62,12 @@ func registerRoutes(app *fiber.App) {
 	app.Get("/api/admin/dashboard", auth.AuthMiddleware("admin"), func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"message": "Welcome to the Admin Dashboard"})
 	})
+
+	// Start the server
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000" // Default port
+	}
+	log.Printf("Server is running on port %s...", port)
+	log.Fatal(app.Listen(":" + port))
 }
