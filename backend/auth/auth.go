@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/HarryKirigwi/go-website/backend/config"
@@ -20,14 +21,14 @@ type User struct {
 	LastName  string `bson:"lastName" json:"lastName"`
 }
 
-// var JWTSecret string
+var JWTSecret string
 
-// func init() {
-// 	JWTSecret = os.Getenv("JWT_SECRET")
-// 	if JWTSecret == "" {
-// 		JWTSecret = "default-secret-for-dev"
-// 	}
-// }
+func init() {
+	JWTSecret = os.Getenv("JWT_SECRET")
+	if JWTSecret == "" {
+		JWTSecret = "default-secret-for-dev"
+	}
+}
 
 type LoginRequest struct {
 	Email    string `json:"email" validate:"required,email"`
@@ -46,36 +47,28 @@ func HashPassword(plainPassword string) (string, error) {
 
 func Login(c *fiber.Ctx) error {
 	var req LoginRequest
-
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 	}
 
-	// Use the global DB from config
-	collection := config.DB.Collection("users")
+	collection := config.ConnectDatabase().Database().Collection("userscollection")
 
-	// Find user
 	var user User
 	err := collection.FindOne(context.Background(), bson.M{"email": req.Email}).Decode(&user)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
-	// Check password
 	if !CheckPasswordHash(req.Password, user.Password) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
-	// Generate token
 	token, err := generateJWT(&user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Could not login"})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"token": token,
-		"role":  user.Role,
-	})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"token": token, "role": user.Role})
 }
 
 func generateJWT(user *User) (string, error) {
@@ -87,5 +80,5 @@ func generateJWT(user *User) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(config.JWTSecret)) // Use JWTSecret from config
+	return token.SignedString([]byte(JWTSecret))
 }
