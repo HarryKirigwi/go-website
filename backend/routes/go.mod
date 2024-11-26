@@ -3,16 +3,14 @@ module github.com/HarryKirigwi/go-website/backend/routes
 go 1.23.3
 
 require (
-	github.com/HarryKirigwi/go-website/backend/auth v0.0.0-20241125095726-abbb2d7beb7a
+	github.com/HarryKirigwi/go-website/backend/auth v0.0.0-20241126052936-303898825754
 	github.com/gofiber/fiber/v2 v2.52.5
-	go.mongodb.org/mongo-driver v1.17.1
 )
 
 require golang.org/x/crypto v0.29.0 // indirect
 
 require (
 	github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241126033058-1af10f4ca16b // indirect
-	github.com/HarryKirigwi/go-website/backend/models v0.0.0-20241126042011-60857a304492 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -30,6 +28,7 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
+	go.mongodb.org/mongo-driver v1.17.1 // indirect
 	golang.org/x/sync v0.9.0 // indirect
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
