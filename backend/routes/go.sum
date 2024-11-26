@@ -1,9 +1,9 @@
 github.com/HarryKirigwi/go-website/backend/auth v0.0.0-20241125095726-abbb2d7beb7a h1:OuBDsbzSyQw/NAeL9ydZ1j1iySZxhYb172WZTbAfhX4=
 github.com/HarryKirigwi/go-website/backend/auth v0.0.0-20241125095726-abbb2d7beb7a/go.mod h1:lX6r+CmbBjxLNhS1x4anw9ulwyw+BJdwrOUWIue8y6o=
-github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241125095726-abbb2d7beb7a h1:h9atdQ+W+RzVaQTUUaKb3HT9RkKVkaZ2a1MgMEEjtDQ=
-github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241125095726-abbb2d7beb7a/go.mod h1:sDrguxdZz2LrwYDWngQkI2BdanVKDCJTJk3mONT9iGk=
-github.com/HarryKirigwi/go-website/backend/models v0.0.0-20241125095726-abbb2d7beb7a h1:cMu+1lKlVXZMOZPxDhkcvLpW1m+poS+ETCYL+LbZF9o=
-github.com/HarryKirigwi/go-website/backend/models v0.0.0-20241125095726-abbb2d7beb7a/go.mod h1:RW6JPdUN5E/6+mLhz0FPjRIxYpF6Nde/xOrOmVhuMnY=
+github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241126033058-1af10f4ca16b h1:rmhdS1+7Mu1/srHhmMrg5L03KcVTtO351OUR+Grq/wE=
+github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241126033058-1af10f4ca16b/go.mod h1:sDrguxdZz2LrwYDWngQkI2BdanVKDCJTJk3mONT9iGk=
+github.com/HarryKirigwi/go-website/backend/models v0.0.0-20241126042011-60857a304492 h1:B61mG1J2GkjQJhdM6Faxqtvtmz/2qUcNBth84jl9Pp0=
+github.com/HarryKirigwi/go-website/backend/models v0.0.0-20241126042011-60857a304492/go.mod h1:xSC1fCXejgwn/eKrDeIAgoeiNOtEgxFlzYLcopjVGbg=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

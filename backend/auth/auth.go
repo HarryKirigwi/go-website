@@ -3,9 +3,9 @@ package auth
 
 import (
 	"context"
+	"os"
 	"strings"
 	"time"
-	"os"
 
 	"github.com/HarryKirigwi/go-website/backend/config"
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +23,6 @@ type User struct {
 	FirstName string `bson:"firstName" json:"firstName"`
 	LastName  string `bson:"lastName" json:"lastName"`
 }
-
 
 // Declare JWTSecret
 var JWTSecret string
@@ -57,14 +56,14 @@ func HashPassword(plainPassword string) (string, error) {
 // Login handler
 func Login(c *fiber.Ctx) error {
 	var req LoginRequest
-	
+
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 	}
 
 	// Get users collection
 	collection := config.ConnectDatabase().Database().Collection("users")
-	
+
 	// Find user
 	var user User
 	err := collection.FindOne(context.Background(), bson.M{"email": req.Email}).Decode(&user)
