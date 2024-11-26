@@ -34,7 +34,7 @@ type RegisterRequest struct {
 	LastName        string `json:"lastName" validate:"required"`
 	Email           string `json:"email" validate:"required,email"`
 	Password        string `json:"password" validate:"required"`
-	ConfirmPassword string `json:"confirmPassword" validate:"required"`
+	ConfirmPassword string `json:"confirmPassword"`
 }
 
 var JWTSecret string

@@ -2,60 +2,113 @@ package config
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Global variables for the database and JWT secret
-var (
+// Config struct to encapsulate application configuration
+type Config struct {
 	DB        *mongo.Database
+	Client    *mongo.Client
 	JWTSecret string
-)
+}
 
-// InitConfig initializes the application's configuration
-func InitConfig() {
-	// Load the JWT secret from environment variables
-	JWTSecret = os.Getenv("JWT_SECRET")
-	if JWTSecret == "" {
-		log.Fatal("JWT_SECRET is not set in the environment variables")
+// InitConfig initializes the application's configuration and returns a Config struct
+func InitConfig() (*Config, error) {
+	// Load the JWT secret
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		return nil, fmt.Errorf("JWT_SECRET is not set in the environment variables")
 	}
 
-	// Connect to MongoDB and set the global `DB` variable
-	DB = connectDatabase()
+	// Connect to MongoDB
+	client, db, err := connectDatabase()
+	if err != nil {
+		return nil, err
+	}
+
+	// Ensure required collections and indexes
+	if err := initializeCollections(db); err != nil {
+		return nil, err
+	}
+
+	// Return a populated Config struct
+	return &Config{
+		DB:        db,
+		Client:    client,
+		JWTSecret: jwtSecret,
+	}, nil
 }
 
 // connectDatabase establishes and verifies a connection to MongoDB
-func connectDatabase() *mongo.Database {
-	// Get the MongoDB URI from environment variables
+func connectDatabase() (*mongo.Client, *mongo.Database, error) {
+	// Get MongoDB URI and database name from environment variables
 	mongoURI := os.Getenv("MONGODB_URI")
 	if mongoURI == "" {
-		log.Fatal("MONGODB_URI is not set in the environment variables")
+		return nil, nil, fmt.Errorf("MONGODB_URI is not set in the environment variables")
 	}
 
-	// Define MongoDB client options
+	databaseName := os.Getenv("MONGODB_DATABASE")
+	if databaseName == "" {
+		return nil, nil, fmt.Errorf("MONGODB_DATABASE is not set in the environment variables")
+	}
+
+	// Client options
 	clientOptions := options.Client().ApplyURI(mongoURI)
 
-	// Create a context with a timeout to prevent hanging connections
+	// Context for the connection
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Initialize a MongoDB client
+	// Connect to MongoDB
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatalf("Error connecting to MongoDB: %v", err)
+		return nil, nil, fmt.Errorf("error connecting to MongoDB: %v", err)
 	}
 
-	// Test the connection by pinging the database
+	// Ping the database to verify connection
 	if err := client.Ping(ctx, nil); err != nil {
-		log.Fatalf("Failed to ping MongoDB: %v", err)
+		return nil, nil, fmt.Errorf("failed to ping MongoDB: %v", err)
 	}
 
 	log.Println("Successfully connected to MongoDB!")
 
-	// Return the specified database (e.g., "users")
-	return client.Database("users")
+	// Return the MongoDB client and database
+	return client, client.Database(databaseName), nil
+}
+
+// initializeCollections ensures that the required collections and indexes exist
+func initializeCollections(db *mongo.Database) error {
+	// Check or create "userscollection" and ensure its indexes
+	collection := db.Collection("userscollection")
+	if err := ensureUsersCollectionIndexes(collection); err != nil {
+		return fmt.Errorf("failed to initialize userscollection: %v", err)
+	}
+
+	log.Println("Collections and indexes initialized successfully")
+	return nil
+}
+
+// ensureUsersCollectionIndexes ensures required indexes for the users collection
+func ensureUsersCollectionIndexes(collection *mongo.Collection) error {
+	// Create a unique index for the "email" field
+	indexModel := mongo.IndexModel{
+		Keys:    bson.D{{Key: "email", Value: 1}},
+		Options: options.Index().SetUnique(true),
+	}
+
+	// Create the index
+	_, err := collection.Indexes().CreateOne(context.Background(), indexModel)
+	if err != nil {
+		return fmt.Errorf("failed to create unique index on 'email': %v", err)
+	}
+
+	log.Println("Unique index on 'email' field ensured")
+	return nil
 }

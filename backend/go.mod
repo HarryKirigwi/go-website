@@ -3,14 +3,15 @@ module github.com/HarryKirigwi/go-website/backend
 go 1.23.3
 
 require (
-	github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241116120324-3a3603e19ab4
-	github.com/HarryKirigwi/go-website/backend/routes v0.0.0-20241116115405-2d68637a420d
+	github.com/HarryKirigwi/go-website/backend/auth v0.0.0-20241126060937-cad52527b896
+	github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241125095726-abbb2d7beb7a
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/joho/godotenv v1.5.1
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
