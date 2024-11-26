@@ -26,7 +26,7 @@ func RegisterRoutes(app *fiber.App, collection *mongo.Collection) {
 	app.Get("/api/user/dashboard", auth.AuthMiddleware("user"), func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"message": "Welcome to the User Dashboard"})
 	})
-	
+
 	app.Get("/api/admin/dashboard", auth.AuthMiddleware("admin"), func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"message": "Welcome to the Admin Dashboard"})
 	})
@@ -56,7 +56,7 @@ func handleRegistration(collection *mongo.Collection) fiber.Handler {
 			})
 		}
 
-  hashedPassword, err := auth.HashPassword(newUser.Password)
+		hashedPassword, err := auth.HashPassword(newUser.Password)
 		if err != nil {
 			return c.Status(500).JSON(fiber.Map{
 				"error": "Failed to hash password",

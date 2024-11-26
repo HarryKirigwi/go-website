@@ -12,7 +12,7 @@ require golang.org/x/crypto v0.29.0 // indirect
 
 require (
 	github.com/HarryKirigwi/go-website/backend/config v0.0.0-20241125095726-abbb2d7beb7a // indirect
-	github.com/HarryKirigwi/go-website/backend/models v0.0.0-20241125095726-abbb2d7beb7a // direct
+	github.com/HarryKirigwi/go-website/backend/models v0.0.0-20241125095726-abbb2d7beb7a // indirect; direct
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
