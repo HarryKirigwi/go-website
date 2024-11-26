@@ -14,7 +14,7 @@ func RegisterRoutes(app *fiber.App) {
 
 	// Auth routes
 	app.Post("/api/login", auth.Login)
-	app.Post("/api/register", auth.Register)
+	app.Post("/api/register/user", auth.Register)
 
 	// Protected routes
 	app.Get("/api/user/dashboard", auth.AuthMiddleware("user"), func(c *fiber.Ctx) error {

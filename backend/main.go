@@ -1,44 +1,3 @@
-// package main
-
-// import (
-// 	"log"
-// 	"os"
-
-// 	"github.com/HarryKirigwi/go-website/backend/config"
-//     "github.com/HarryKirigwi/go-website/backend/routes"
-// 	"github.com/gofiber/fiber/v2"
-// 	"github.com/gofiber/fiber/v2/middleware/cors"
-// 	"github.com/joho/godotenv"
-// )
-
-// func main() {
-// 	// Load environment variables
-// 	err := godotenv.Load()
-// 	if err != nil {
-// 		log.Fatal("Error loading .env file:", err)
-// 	}
-
-// 	// Connect to the database
-// 	collection := config.ConnectDatabase()
-
-// 	// Initialize Fiber app
-// 	app := fiber.New()
-
-// 	// Enable CORS middleware
-// 	app.Use(cors.New(cors.Config{
-// 		AllowOrigins:     os.Getenv("ALLOWED_ORIGIN"),
-// 		AllowMethods:     "GET,POST,PUT,DELETE",
-// 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
-// 		AllowCredentials: true,
-// 	}))
-
-// 	// Register routes
-// 	routes.RegisterRoutes(app, collection)
-
-// 	// Start the app
-// 	log.Fatal(app.Listen(":3000"))
-// }
-
 package main
 
 import (
@@ -46,11 +5,11 @@ import (
 	"os"
 
 	"github.com/HarryKirigwi/go-website/backend/config"
-	"github.com/HarryKirigwi/go-website/backend/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
+	"github.com/HarryKirigwi/go-website/backend/auth"
 )
 
 func main() {
@@ -71,7 +30,7 @@ func main() {
 	}
 
 	// Connect to the database
-	collection := config.ConnectDatabase()
+	// collection := config.ConnectDatabase() // Keeping the original database connection as requested
 
 	// Initialize Fiber app
 	app := fiber.New()
@@ -84,13 +43,28 @@ func main() {
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}))
-	// app.Use(fiber.Compress()) // Enable gzip compression
 
 	// Serve static files (if applicable)
 	app.Static("/", "./public")
 
 	// Register routes
-	routes.RegisterRoutes(app, collection)
+	// Public routes
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Status(200).SendString("Welcome to the User Registration API!")
+	})
+
+	// Auth routes
+	app.Post("/api/login", auth.Login)
+	app.Post("/api/register/user", auth.Register)
+
+	// Protected routes
+	app.Get("/api/user/dashboard", auth.AuthMiddleware("user"), func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{"message": "Welcome to the User Dashboard"})
+	})
+
+	app.Get("/api/admin/dashboard", auth.AuthMiddleware("admin"), func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{"message": "Welcome to the Admin Dashboard"})
+	})
 
 	// Start the server
 	port := os.Getenv("PORT")
