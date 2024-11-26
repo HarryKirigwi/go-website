@@ -84,7 +84,7 @@ func main() {
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}))
-	app.Use(fiber.Compress()) // Enable gzip compression
+	// app.Use(fiber.Compress()) // Enable gzip compression
 
 	// Serve static files (if applicable)
 	app.Static("/", "./public")

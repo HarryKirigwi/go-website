@@ -102,7 +102,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Login handler
@@ -190,67 +189,4 @@ func generateJWT(user *models.User) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(config.JWTSecret))
-}
-
-// routes.go modifications
-func RegisterRoutes(app *fiber.App, collection *mongo.Collection) {
-	app.Post("/api/register", func(c *fiber.Ctx) error {
-		var newUser struct {
-			FirstName       string `json:"firstName"`
-			LastName        string `json:"lastName"`
-			Email           string `json:"email"`
-			Password        string `json:"password"`
-			ConfirmPassword string `json:"confirmPassword"`
-		}
-
-		if err := c.BodyParser(&newUser); err != nil {
-			return c.Status(400).JSON(fiber.Map{"error": "Failed to parse request body"})
-		}
-
-		// Validate passwords match
-		if newUser.Password != newUser.ConfirmPassword {
-			return c.Status(400).JSON(fiber.Map{"error": "Passwords do not match"})
-		}
-
-		// Hash password
-		hashedPassword, err := models.HashPassword(newUser.Password)
-		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": "Failed to hash password"})
-		}
-
-		// Create user document
-		user := bson.D{
-			{Key: "firstName", Value: newUser.FirstName},
-			{Key: "lastName", Value: newUser.LastName},
-			{Key: "email", Value: newUser.Email},
-			{Key: "password", Value: hashedPassword},
-			{Key: "role", Value: "user"}, // Default role
-		}
-
-		// Check for existing user
-		var existingUser models.User
-		err = collection.FindOne(context.Background(), bson.D{{Key: "email", Value: newUser.Email}}).Decode(&existingUser)
-		if err == nil {
-			return c.Status(400).JSON(fiber.Map{"error": "Email already registered"})
-		}
-
-		// Insert user
-		result, err := collection.InsertOne(context.Background(), user)
-		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": "Failed to register user"})
-		}
-
-		return c.Status(201).JSON(fiber.Map{
-			"message": "User registered successfully",
-			"userId":  result.InsertedID,
-		})
-	})
-
-	app.Post("/api/login", auth.Login)
-
-	// Protected routes
-	app.Get("/api/user/profile", auth.AuthMiddleware("user"), func(c *fiber.Ctx) error {
-		claims := c.Locals("user").(jwt.MapClaims)
-		return c.JSON(fiber.Map{"user": claims})
-	})
 }
