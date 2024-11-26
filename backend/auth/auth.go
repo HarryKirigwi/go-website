@@ -1,129 +1,79 @@
-// package auth
-
-// import (
-// 	"time"
-
-// 	"github.com/HarryKirigwi/go-website/backend/config"
-// 	"github.com/HarryKirigwi/go-website/backend/models"
-// 	"github.com/gofiber/fiber/v2"
-// 	"github.com/golang-jwt/jwt/v4"
-// )
-
-// // Struct for login request
-// type LoginRequest struct {
-// 	Email    string `json:"email" validate:"required,email"`
-// 	Password string `json:"password" validate:"required"`
-// }
-
-// // Login handler
-// func Login(c *fiber.Ctx) error {
-// 	var req LoginRequest
-// 	// Parse and validate request body
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
-// 	}
-
-// 	// Retrieve user from database
-// 	user := new(models.User)
-// 	if err := config.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
-// 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
-// 	}
-
-// 	// Check hashed password
-// 	if !models.CheckPasswordHash(req.Password, user.Password) {
-// 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
-// 	}
-
-// 	// Generate JWT token
-// 	token, err := generateJWT(user)
-// 	if err != nil {
-// 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Could not log in"})
-// 	}
-
-// 	// Return JWT token and user role
-// 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"token": token, "role": user.Role})
-// }
-
-// // Middleware to protect routes
-// func AuthMiddleware(role string) fiber.Handler {
-// 	return func(c *fiber.Ctx) error {
-// 		// Extract token from Authorization header
-// 		tokenStr := c.Get("Authorization")
-// 		if tokenStr == "" {
-// 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Missing token"})
-// 		}
-
-// 		// Parse token with claims
-// 		claims := new(jwt.MapClaims)
-// 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-// 			return []byte(config.JWTSecret), nil
-// 		})
-
-// 		if err != nil || !token.Valid {
-// 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid token"})
-// 		}
-
-// 		// Check role if specified
-// 		if role != "" && (*claims)["role"] != role {
-// 			return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Access denied"})
-// 		}
-
-// 		// Store user claims in context for downstream use
-// 		c.Locals("user", claims)
-// 		return c.Next()
-// 	}
-// }
-
-// // Helper function to generate JWT
-// func generateJWT(user *models.User) (string, error) {
-// 	claims := jwt.MapClaims{
-// 		"id":    user.ID,
-// 		"email": user.Email,
-// 		"role":  user.Role,
-// 		"exp":   time.Now().Add(24 * time.Hour).Unix(), // Token expires in 24 hours
-// 	}
-
-// 	// Generate signed token
-// 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-// 	return token.SignedString([]byte(config.JWTSecret))
-// }
-
 // auth.go
 package auth
 
 import (
+	"context"
 	"strings"
 	"time"
-
-	"context"
+	"os"
 
 	"github.com/HarryKirigwi/go-website/backend/config"
-	"github.com/HarryKirigwi/go-website/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
+	"golang.org/x/crypto/bcrypt"
 )
+
+// User struct for MongoDB documents
+type User struct {
+	ID        string `bson:"_id,omitempty" json:"id"`
+	Email     string `bson:"email" json:"email"`
+	Password  string `bson:"password" json:"-"`
+	Role      string `bson:"role" json:"role"`
+	FirstName string `bson:"firstName" json:"firstName"`
+	LastName  string `bson:"lastName" json:"lastName"`
+}
+
+
+// Declare JWTSecret
+var JWTSecret string
+
+// Initialize JWTSecret in init()
+func init() {
+	JWTSecret = os.Getenv("JWT_SECRET")
+	if JWTSecret == "" {
+		JWTSecret = "default-secret-for-dev" // Use a default for development
+	}
+}
+
+// LoginRequest struct for login payload
+type LoginRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+}
+
+// CheckPasswordHash verifies a hashed password against a plain-text password
+func CheckPasswordHash(plainPassword, hashedPassword string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
+	return err == nil
+}
+
+// HashPassword generates a bcrypt hash for a plain-text password
+func HashPassword(plainPassword string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(plainPassword), bcrypt.DefaultCost)
+	return string(bytes), err
+}
 
 // Login handler
 func Login(c *fiber.Ctx) error {
-	var req models.LoginRequest
-
+	var req LoginRequest
+	
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 	}
 
 	// Get users collection
-	collection := config.DB.Collection("users")
-
+	collection := config.ConnectDatabase().Database().Collection("users")
+	
 	// Find user
-	var user models.User
+	var user User
 	err := collection.FindOne(context.Background(), bson.M{"email": req.Email}).Decode(&user)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
 	// Check password
-	if !models.CheckPasswordHash(req.Password, user.Password) {
+	if !CheckPasswordHash(req.Password, user.Password) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
@@ -133,9 +83,9 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Could not login"})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(models.LoginResponse{
-		Token: token,
-		Role:  user.Role,
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"token": token,
+		"role":  user.Role,
 	})
 }
 
@@ -152,7 +102,7 @@ func AuthMiddleware(role string) fiber.Handler {
 
 		// Parse and validate token
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return []byte(config.JWTSecret), nil
+			return []byte(JWTSecret), nil
 		})
 
 		if err != nil || !token.Valid {
@@ -179,7 +129,7 @@ func AuthMiddleware(role string) fiber.Handler {
 	}
 }
 
-func generateJWT(user *models.User) (string, error) {
+func generateJWT(user *User) (string, error) {
 	claims := jwt.MapClaims{
 		"id":    user.ID,
 		"email": user.Email,
@@ -188,5 +138,5 @@ func generateJWT(user *models.User) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(config.JWTSecret))
+	return token.SignedString([]byte(JWTSecret))
 }

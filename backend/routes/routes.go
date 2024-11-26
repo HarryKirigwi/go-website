@@ -5,11 +5,10 @@ import (
 	"context"
 	"time"
 
+	"github.com/HarryKirigwi/go-website/backend/auth"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"github.com/HarryKirigwi/go-website/backend/models"
-	"github.com/HarryKirigwi/go-website/backend/auth"
 )
 
 // RegisterRoutes registers all the routes for the application
@@ -20,7 +19,7 @@ func RegisterRoutes(app *fiber.App, collection *mongo.Collection) {
 	})
 
 	// Auth routes
-	app.Post("/api/login", auth.Login)  // Add this line to register the login route
+	app.Post("/api/login", auth.Login)
 	app.Post("/api/register", handleRegistration(collection))
 
 	// Protected routes
@@ -57,7 +56,7 @@ func handleRegistration(collection *mongo.Collection) fiber.Handler {
 			})
 		}
 
-		hashedPassword, err := models.HashPassword(newUser.Password)
+  hashedPassword, err := auth.HashPassword(newUser.Password)
 		if err != nil {
 			return c.Status(500).JSON(fiber.Map{
 				"error": "Failed to hash password",
