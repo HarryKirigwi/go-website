@@ -71,7 +71,7 @@ func main() {
 	}
 
 	// Connect to the database
-	collection := config.ConnectDatabase()
+	config.InitConfig()
 
 	// Initialize Fiber app
 	app := fiber.New()

@@ -10,50 +10,52 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Global variables for database and JWT secret
+// Global variables for the database and JWT secret
 var (
 	DB        *mongo.Database
 	JWTSecret string
 )
 
-// Initialize configuration
+// InitConfig initializes the application's configuration
 func InitConfig() {
 	// Load the JWT secret from environment variables
 	JWTSecret = os.Getenv("JWT_SECRET")
 	if JWTSecret == "" {
-		log.Fatal("JWT_SECRET is not set in the .env file")
+		log.Fatal("JWT_SECRET is not set in the environment variables")
 	}
 
-	// Connect to MongoDB
+	// Connect to MongoDB and set the global `DB` variable
 	DB = connectDatabase()
 }
 
-// ConnectDatabase establishes a connection to the MongoDB database
+// connectDatabase establishes and verifies a connection to MongoDB
 func connectDatabase() *mongo.Database {
+	// Get the MongoDB URI from environment variables
 	mongoURI := os.Getenv("MONGODB_URI")
 	if mongoURI == "" {
-		log.Fatal("MONGODB_URI is not set in the .env file")
+		log.Fatal("MONGODB_URI is not set in the environment variables")
 	}
 
+	// Define MongoDB client options
 	clientOptions := options.Client().ApplyURI(mongoURI)
 
-	// Set up a context with a timeout
+	// Create a context with a timeout to prevent hanging connections
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Create a new client and connect to the server
+	// Initialize a MongoDB client
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatal("Error connecting to MongoDB:", err)
+		log.Fatalf("Error connecting to MongoDB: %v", err)
 	}
 
-	// Ping the database to ensure the connection is established
+	// Test the connection by pinging the database
 	if err := client.Ping(ctx, nil); err != nil {
-		log.Fatal("Failed to ping MongoDB:", err)
+		log.Fatalf("Failed to ping MongoDB: %v", err)
 	}
 
-	log.Println("Connected to MongoDB!")
+	log.Println("Successfully connected to MongoDB!")
 
-	// Specify the database to use
+	// Return the specified database (e.g., "users")
 	return client.Database("users")
 }
