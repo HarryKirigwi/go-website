@@ -70,13 +70,10 @@ export function LoginForm() {
       const result = await response.json();
 
       if (response.ok) {
-        // Save the JWT token to localStorage
         localStorage.setItem("token", result.token);
-
-        // Redirect to dashboard
         navigate("/dashboard");
       } else {
-        alert(result.error); // Handle login error
+        alert(result.error);
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -161,6 +158,7 @@ export function LoginForm() {
             )}
           />
 
+          {/* ```javascript */}
           <div className="forgot-password-div">
             <FormControlLabel control={<Checkbox sx={{ color: "white" }} />} label="Remember me" size="small" {...register("remember")} />
             <div>

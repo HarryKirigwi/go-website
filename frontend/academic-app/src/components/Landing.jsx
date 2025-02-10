@@ -51,6 +51,10 @@ export default function LandingPage() {
     navigate("/login");
   };
 
+  const handleOrder = () =>{
+    navigate("/dashboard");
+  }
+
   return (
     <ScrollTrigger
       onEnter={() => setCounterOn(true)}
@@ -113,7 +117,7 @@ export default function LandingPage() {
                     <Button
                       variant="contained"
                       size={isMobile ? "small" : "medium"}
-                      onClick={handleLogin}
+                      onClick={handleOrder}
                     >
                       Order Now
                     </Button>

@@ -1,6 +1,6 @@
+/* General Container Styles */
 .container {
   height: fit-content;
-  /* background-color: #257dd4; */
   background-color: #009be5;
   padding: 20px;
   margin-bottom: 100px;
@@ -9,20 +9,37 @@
   align-items: center;
   margin-top: 4rem;
 }
-.submit-div {
+
+/* Login Container */
+.login-container {
+  height: 100vh;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
   display: flex;
-  justify-content: end;
-}
-.fa-whatsapp {
-  color: #eeeeef;
-  font-size: large;
-}
-.icon {
-  display: flex;
-  height: 44px;
+  justify-content: center;
   align-items: center;
 }
 
+/* Login Form */
+.login-form {
+  background-color: transparent;
+  color: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Login Image */
+.login-image {
+  display: none; /* Hide the image on mobile */
+}
+
+/* Forgot Password Section */
 .forgot-password-div {
   display: flex;
   justify-content: space-between;
@@ -40,34 +57,50 @@
   height: 20px;
 }
 
+/* Responsive Styles */
 @media (max-width: 600px) {
   .container {
     height: fit-content;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .login-container {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .login-form {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .login-image {
+    display: none; /* Hide the image on mobile */
+  }
+
+  .forgot-password-div {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .forgot-password {
+    margin-top: 10px; /* Add space between checkbox and link */
   }
 }
 
-/*Login form styles*/
-
-.signup-box {
-  height: 100vh;
-}
-
-.login-form,
-.signupForm {
-  background-color: transparent;
-  color: white;
-}
-
-/*Order form styles*/
+/* Order Form Styles */
 .order-section {
   height: fit-content;
   border-radius: 10px;
 }
+
 .order-form-section {
   height: fit-content;
   display: flex;
   justify-content: center;
 }
+
 .form-container {
   display: flex;
   vertical-align: top;
@@ -77,56 +110,80 @@
   max-width: 400px;
 }
 
-/*Paper details form styles*/
-
+/* Paper Details Form Styles */
 .paper-details {
   height: fit-content;
   display: flex;
   justify-content: center;
 }
 
-.login-container,
+/* Signup Form Styles */
 .signup-box {
   height: 100vh;
+}
+
+.signupForm {
+  background-color: transparent;
+  color: white;
+}
+
+/* Hero Section Styles */
+.hero-section {
+  height: 80vh;
+  background-image: linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)),
+    url("../images/wave-1153797.jpg");
+  border-radius: 5px;
+  background-position: center;
+  background-size: cover;
+  display: flex;
   position: relative;
   width: 100%;
   overflow: hidden;
-  margin-left: 8rem;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 4rem;
 }
 
-body {
-  overflow-x: hidden;
-}
-
-.login-image {
+.hero-section .image-section {
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)),
-    url("../images/pexels-cup-of-couple-6177634.jpg");
+  background-image: linear-gradient(rgba(255, 166, 0, 0.2), rgba(255, 166, 0, 0.2)),
+    url("../images/pexels-karolina-grabowska-8106681.jpg");
   background-position: center;
   background-size: cover;
 }
 
-.login-form,
-.login-image,
-.signupForm {
+.hero-section .image-section,
+.hero-section .text-section {
   position: absolute;
   top: 0;
   height: 100%;
+  width: 50%;
   padding: 20px;
   box-sizing: border-box;
 }
 
-.login-form,
-.signupForm {
+.hero-section .image-section {
   left: 0;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  width: 35%;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
 }
 
-.login-image {
+.hero-section .text-section {
   right: 0;
-  width: 65%;
-  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0% 0, 100% 0, 100% 100%, 0 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-buttons {
+  margin-top: 50px;
+}
+
+@media (max-width: 600px) {
+  .hero-section {
+    display: none;
+  }
 }
